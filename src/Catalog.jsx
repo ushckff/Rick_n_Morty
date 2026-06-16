@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 
-const Catalog = ({ value, setPages, page, pages }) => {
+const Catalog = ({ query, setPages, page, pages }) => {
   const [films, setFilms] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
     fetch(
-      `https://rickandmortyapi.com/api/character/?name=${value}&page=${page}`,
+      `https://rickandmortyapi.com/api/character/?name=${query}&page=${page}`,
     )
       .then((res) => {
         if (res.status === 404) {
@@ -17,9 +17,8 @@ const Catalog = ({ value, setPages, page, pages }) => {
         if (!res.ok) {
           throw new Error(`Err: ${res.status}`);
         }
-        return res;
+        return res.json();
       })
-      .then((res) => res.json())
       .then(
         (json) => (
           setError(""),
@@ -33,7 +32,7 @@ const Catalog = ({ value, setPages, page, pages }) => {
         setLoading(false);
         setFilms([]);
       });
-  }, [value, page, setPages]);
+  }, [query, page, setPages]);
   // сеттер в зависимости кинул чтобы линтер не ругался
 
   if (loading) {

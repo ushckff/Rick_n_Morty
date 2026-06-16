@@ -1,11 +1,19 @@
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 import Catalog from "./Catalog";
 
 const App = () => {
   const [inputValue, setInputValue] = useState("");
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState();
+  const [pages, setPages] = useState(1);
   const inputId = useId();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setQuery(inputValue);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [inputValue]);
   function inputChange(e) {
     setInputValue(e.target.value);
     setPage(1);
@@ -30,12 +38,7 @@ const App = () => {
         <button onClick={prevPage}>Назад</button>
         <button onClick={nextPage}>Вперед</button>
       </div>
-      <Catalog
-        value={inputValue}
-        page={page}
-        setPages={setPages}
-        pages={pages}
-      />
+      <Catalog query={query} page={page} setPages={setPages} pages={pages} />
     </div>
   );
 };
